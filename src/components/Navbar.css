@@ -1,0 +1,45 @@
+.custom-navbar {
+    background: linear-gradient(90deg, rgba(33,150,243,1) 0%, rgba(30,136,229,1) 50%, rgba(25,118,210,1) 100%);
+    padding: 10px 20px;
+  }
+  
+  .custom-navbar-brand {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .custom-navbar .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+  
+  .custom-navbar .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%28255, 255, 255, 0.5%29' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+  }
+  
+  .custom-navbar .navbar-collapse {
+    justify-content: flex-end;
+  }
+  
+  .custom-navbar .nav-link {
+    color: white;
+    font-size: 18px;
+    margin-right: 15px;
+  }
+  
+  .custom-navbar .nav-link:hover {
+    color: #ffeb3b;
+  }
+  
+  .custom-navbar .dropdown-menu {
+    background-color: rgba(33,150,243,1);
+  }
+  
+  .custom-navbar .dropdown-item {
+    color: white;
+  }
+  
+  .custom-navbar .dropdown-item:hover {
+    background-color: rgba(30,136,229,1);
+    color: #ffeb3b;
+  }
