@@ -163,7 +163,7 @@ function AI() {
             type="text"
             value={input}
             onChange={handleInputChange}
-            placeholder="Type a message..."
+            placeholder="Ask Something..."
             style={chatbotStyles.input}
           />
           <button onClick={handleSendMessage} style={chatbotStyles.sendIcon}>
