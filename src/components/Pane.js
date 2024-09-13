@@ -5,6 +5,7 @@ import SplitPane from "split-pane-react/esm/SplitPane";
 import Upload from "../utils/Upload";
 import PipeLine from "../utils/PipeLine";
 import "./Pane.css";
+import AI from "../utils/AI";
 
 const Divide = () => {
   const [sizes, setSizes] = useState([100, 400]); // Initial sizes of panes
@@ -41,9 +42,9 @@ const Divide = () => {
             </button>
             <button
               className="styled-button"
-              onClick={() => handleButtonClick(Upload)}
+              onClick={() => handleButtonClick(AI)}
             >
-              Additional Button
+              AI
             </button>
           </div>
         </Pane>
