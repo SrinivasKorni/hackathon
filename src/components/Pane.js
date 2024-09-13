@@ -18,7 +18,7 @@ const Divide = () => {
   };
 
   return (
-    <div style={{ height: "100vh" }}>
+    <div style={{ height: "90vh" }}>
       <SplitPane
         split="vertical"
         sizes={sizes}
@@ -49,7 +49,7 @@ const Divide = () => {
           </div>
         </Pane>
         <Pane minSize={100}>
-          <div style={{ padding: "20px", backgroundColor: "#e9ecef" }}>
+          <div style={{ padding: "230px", backgroundColor: "#e9ecef" }}>
             {content}
           </div>
         </Pane>
