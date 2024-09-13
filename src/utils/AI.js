@@ -23,7 +23,7 @@ function AI() {
     chatbox: {
       display: "flex",
       flexDirection: "column",
-      height: "auto", // Full height of the parent container
+      height: "440px", // Full height of the parent container
     },
     messages: {
       maxHeight: "390px",

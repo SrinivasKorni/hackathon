@@ -6,6 +6,9 @@ import VForm from "../styles/Form";
 const PipeLine = () => {
   const [showExistingJobs, setShowExistingJobs] = useState(false);
   const [showCreateTask, setShowCreateTask] = useState(false);
+  const mystyle = {
+    margin: "2%",
+  };
 
   const [tasks, setTasks] = useState([
     {
@@ -34,7 +37,11 @@ const PipeLine = () => {
   return (
     <div>
       {/* Button and Modal for Showing Existing Jobs */}
-      <Button variant="primary" onClick={handleShowExistingJobs}>
+      <Button
+        style={mystyle}
+        variant="primary"
+        onClick={handleShowExistingJobs}
+      >
         Show Existing Jobs
       </Button>
       <br />
@@ -80,7 +87,7 @@ const PipeLine = () => {
       </Modal>
 
       {/* Button and Modal for Creating New Task */}
-      <Button variant="primary" onClick={handleShowCreateTask}>
+      <Button  variant="primary" onClick={handleShowCreateTask}>
         Create Task
       </Button>
       <Modal show={showCreateTask} onHide={handleCloseCreateTask}>

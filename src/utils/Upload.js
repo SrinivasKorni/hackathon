@@ -4,7 +4,11 @@ import Modal from 'react-bootstrap/Modal';
 
 function Upload() {
   const [show, setShow] = useState(false);
-  const [file, setFile] = useState()
+  
+  const [file, setFile] = useState();
+  const mystyle = {
+    margin:'5%'
+  };
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -14,7 +18,7 @@ function Upload() {
 
   return (
     <>
-      <Button variant="primary" onClick={handleShow}>
+      <Button style={mystyle} variant="primary" onClick={handleShow}>
         Upload
       </Button>
 

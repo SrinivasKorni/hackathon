@@ -7,10 +7,10 @@ function Navb() {
   return (
     <Navbar expand="lg" className="custom-navbar">
       <Container>
-        <Navbar.Brand href="#home" className="custom-navbar-brand">
+        <Navbar.Brand  style={{color: "white"}} href="#home" className="custom-navbar-brand" >
           Automate-Databricks
         </Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        {/* <Navbar.Toggle aria-controls="basic-navbar-nav" /> */}
         <Navbar.Collapse id="basic-navbar-nav"></Navbar.Collapse>
       </Container>
     </Navbar>

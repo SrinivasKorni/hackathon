@@ -8,6 +8,7 @@
   }
   
   .styled-button {
+    padding-top: 10%;
     margin-top: 20px;
     padding: 10px 20px;
     background-color: #007bff;
@@ -25,4 +26,9 @@
   
   .styled-button:active {
     background-color: #004085;
+  }
+  h1{
+    /* border-top: 200px; */
+    padding-top: 22%;
+    /* justify-content: center; */
   }
