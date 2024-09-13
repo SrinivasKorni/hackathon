@@ -1,41 +1,101 @@
 import React, { useState } from "react";
-import { Button } from "react-bootstrap";
-import AddTaskModal from "./Modal"; // Assuming AddTaskModal is in the same directory
+import { Button, ModalBody, Modal } from "react-bootstrap";
+import "../styles/Button.css";
+import VForm from "../styles/Form";
 
 const PipeLine = () => {
-  const [showModal, setShowModal] = useState(false);
-  const [tasks, setTasks] = useState([]);
+  const [showExistingJobs, setShowExistingJobs] = useState(false);
+  const [showCreateTask, setShowCreateTask] = useState(false);
 
-  const handleShowModal = () => setShowModal(true);
-  const handleCloseModal = () => setShowModal(false);
+  const [tasks, setTasks] = useState([
+    {
+      taskname: "Sk",
+      clusterid: "1234",
+      key: "asjd",
+      value: "adsds",
+    },
+  ]);
 
-  const handleSaveTask = (newTask) => {
-    setTasks([...tasks, newTask]);
-    handleCloseModal();
+  const handleShowExistingJobs = () => setShowExistingJobs(true);
+  const handleCloseExistingJobs = () => setShowExistingJobs(false);
+
+  const handleShowCreateTask = () => setShowCreateTask(true);
+  const handleCloseCreateTask = () => setShowCreateTask(false);
+
+  const handleNewTask = (newTask) => {
+    setTasks([...tasks, newTask]); // Add new task to tasks array
+  };
+
+  const handleDeleteTask = (index) => {
+    const updatedTasks = tasks.filter((_, i) => i !== index);
+    setTasks(updatedTasks); // Update tasks array without the deleted task
   };
 
   return (
     <div>
-      <h2>PipeLine Component</h2>
-      <p>This is the content of the PipeLine component.</p>
-      <Button variant="primary" onClick={handleShowModal}>
-        Add New Task
+      {/* Button and Modal for Showing Existing Jobs */}
+      <Button variant="primary" onClick={handleShowExistingJobs}>
+        Show Existing Jobs
       </Button>
-      <AddTaskModal
-        show={showModal}
-        handleClose={handleCloseModal}
-        handleSave={handleSaveTask}
-      />
-      <div>
-        <h3>Tasks</h3>
-        <ul>
-          {tasks.map((task, index) => (
-            <li key={index}>
-              <strong>{task.taskname}</strong>: {task.task1}, {task.task2}
-            </li>
-          ))}
-        </ul>
-      </div>
+      <br />
+      <br />
+      <Modal show={showExistingJobs} onHide={handleCloseExistingJobs}>
+        <Modal.Header closeButton>
+          <Modal.Title>Existing Tasks</Modal.Title>
+        </Modal.Header>
+        <ModalBody>
+          {tasks.length === 0 ? (
+            <p>No tasks available</p>
+          ) : (
+            tasks.map((task, index) => (
+              <div key={index}>
+                <p>
+                  <strong>Task Name:</strong> {task.taskname}
+                </p>
+                <p>
+                  <strong>Cluster ID:</strong> {task.clusterid}
+                </p>
+                <p>
+                  <strong>Key:</strong> {task.key}
+                </p>
+                <p>
+                  <strong>Value:</strong> {task.value}
+                </p>
+                <Button
+                  variant="danger"
+                  onClick={() => handleDeleteTask(index)}
+                >
+                  Delete
+                </Button>
+                <hr />
+              </div>
+            ))
+          )}
+        </ModalBody>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseExistingJobs}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Button and Modal for Creating New Task */}
+      <Button variant="primary" onClick={handleShowCreateTask}>
+        Create Task
+      </Button>
+      <Modal show={showCreateTask} onHide={handleCloseCreateTask}>
+        <Modal.Header closeButton>
+          <Modal.Title>Creating New Task</Modal.Title>
+        </Modal.Header>
+        <ModalBody>
+          <VForm onNewTask={handleNewTask} />
+        </ModalBody>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseCreateTask}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

@@ -25,7 +25,7 @@ const Divide = () => {
         minSize={100}
         maxSize={600}
       >
-        <Pane minSize={100} maxSize={500}>
+        <Pane minSize={250} maxSize={250}>
           <div className="button-container">
             <button
               className="styled-button"

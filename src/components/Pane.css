@@ -1,4 +1,5 @@
 .button-container {
+  /* m: 20px; */
     padding: 20px;
     background-color: #f8f9fa;
     display: flex;
@@ -7,6 +8,7 @@
   }
   
   .styled-button {
+    margin-top: 20px;
     padding: 10px 20px;
     background-color: #007bff;
     color: white;
