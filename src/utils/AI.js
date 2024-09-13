@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import ai from '../logos/ai.png';
+import recv from '../logos/speech-bubble.png';
 
 function AI() {
   const [messages, setMessages] = useState([]);
@@ -24,36 +26,52 @@ function AI() {
     messages: {
       maxHeight: "390px",
       overflowY: "scroll",
-      flexGrow: 10, // Allows messages area to grow and fill available space
+      flexGrow: 1, // Allows messages area to grow and fill available space
+    },
+    messageContainer: {
+      display: "flex",
+      alignItems: "flex-end",
+      marginBottom: "10px",
     },
     message: {
-      marginBottom: "10px",
+      padding: "5px 10px",
+      borderRadius: "5px",
+      maxWidth: "60%",
+      display: "flex",
+      alignItems: "center",
     },
     botMessage: {
       backgroundColor: "#007bff",
       color: "white",
-      padding: "5px 10px",
-      borderRadius: "5px",
-      marginLeft: "auto",
+      marginLeft: "10px",
+      marginRight: "auto",
     },
     userMessage: {
       backgroundColor: "#e0e0e0",
-      padding: "5px 10px",
-      borderRadius: "5px",
-      marginRight: "auto",
+      marginRight: "10px",
+      marginLeft: "auto",
+    },
+    icon: {
+      width: "24px",
+      height: "24px",
+      margin: "0 8px",
+    },
+    inputContainer: {
+      display: "flex",
+      alignItems: "center",
     },
     input: {
-      width: "100%",
+      flex: 1,
       padding: "5px",
       border: "1px solid #ccc",
       borderRadius: "5px",
-      marginBottom: "10px",
     },
     button: {
+      width: "60px",
       backgroundColor: "#007bff",
       color: "white",
       border: "none",
-      padding: "10px 20px",
+      padding: "10px",
       borderRadius: "5px",
       cursor: "pointer",
     },
@@ -64,7 +82,6 @@ function AI() {
   };
 
   const handleSendMessage = () => {
-    // api callto the backend
     if (input.trim()) {
       setMessages([...messages, { role: "user", text: input }]);
       setInput("");
@@ -80,23 +97,43 @@ function AI() {
       <div style={chatbotStyles.chatbox}>
         <div style={chatbotStyles.messages}>
           {messages.map((message, index) => (
-            <div key={index} style={chatbotStyles.message}>
+            <div key={index} style={chatbotStyles.messageContainer}>
               {message.role === "bot" ? (
-                <div style={chatbotStyles.botMessage}>{message.text}</div>
+                <>
+                  <img
+                    src={ai}
+                    alt="Receiver Icon"
+                    style={chatbotStyles.icon}
+                  />
+                  <div style={{ ...chatbotStyles.message, ...chatbotStyles.botMessage }}>
+                    {message.text}
+                  </div>
+                </>
               ) : (
-                <div style={chatbotStyles.userMessage}>{message.text}</div>
+                <>
+                  <div style={{ ...chatbotStyles.message, ...chatbotStyles.userMessage }}>
+                    {message.text}
+                  </div>
+                  <img
+                    src= {recv}
+                    alt="Sender Icon"
+                    style={chatbotStyles.icon}
+                  />
+                </>
               )}
             </div>
           ))}
         </div>
-        <input
-          type="text"
-          value={input}
-          onChange={handleInputChange}
-          placeholder="Type a message..."
-          style={chatbotStyles.input}
-        />
-        <button onClick={handleSendMessage} style={chatbotStyles.button}>Send</button>
+        <div style={chatbotStyles.inputContainer}>
+          <input
+            type="text"
+            value={input}
+            onChange={handleInputChange}
+            placeholder="Type a message..."
+            style={chatbotStyles.input}
+          />
+          <button onClick={handleSendMessage} style={chatbotStyles.button}>Send</button>
+        </div>
       </div>
     </div>
   );
