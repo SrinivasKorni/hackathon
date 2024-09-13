@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import ai from '../logos/ai.png';
-import recv from '../logos/speech-bubble.png';
+import ai from "../logos/ai.png";
+import recv from "../logos/user.png";
+import upload from '../logos/upload.png';
 
 function AI() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false); // State for loading indicator
 
   const chatbotStyles = {
     chatbot: {
@@ -66,14 +68,22 @@ function AI() {
       border: "1px solid #ccc",
       borderRadius: "5px",
     },
-    button: {
-      width: "60px",
+    sendIcon: {
+      width: "30px", // Adjust size as needed
+      height: "30px", // Adjust size as needed
       backgroundColor: "#007bff",
-      color: "white",
       border: "none",
-      padding: "10px",
       borderRadius: "5px",
       cursor: "pointer",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      marginLeft: "8px",
+    },
+    loadingIndicator: {
+      margin: "10px",
+      fontStyle: "italic",
+      color: "#007bff",
     },
   };
 
@@ -81,14 +91,27 @@ function AI() {
     setInput(e.target.value);
   };
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (input.trim()) {
       setMessages([...messages, { role: "user", text: input }]);
       setInput("");
-      // Simulate bot response
-      setTimeout(() => {
-        setMessages([...messages, { role: "user", text: input }, { role: "bot", text: "This is a bot response" }]);
-      }, 1000);
+      setLoading(true); // Show loading indicator
+
+      try {
+        // Simulate an API request with a delay
+        const response = await new Promise((resolve) =>
+          setTimeout(() => resolve("This is a bot response"), 1000)
+        );
+        setMessages([
+          ...messages,
+          { role: "user", text: input },
+          { role: "bot", text: response },
+        ]);
+      } catch (error) {
+        console.error("Error fetching bot response:", error);
+      } finally {
+        setLoading(false); // Hide loading indicator
+      }
     }
   };
 
@@ -105,17 +128,27 @@ function AI() {
                     alt="Receiver Icon"
                     style={chatbotStyles.icon}
                   />
-                  <div style={{ ...chatbotStyles.message, ...chatbotStyles.botMessage }}>
+                  <div
+                    style={{
+                      ...chatbotStyles.message,
+                      ...chatbotStyles.botMessage,
+                    }}
+                  >
                     {message.text}
                   </div>
                 </>
               ) : (
                 <>
-                  <div style={{ ...chatbotStyles.message, ...chatbotStyles.userMessage }}>
+                  <div
+                    style={{
+                      ...chatbotStyles.message,
+                      ...chatbotStyles.userMessage,
+                    }}
+                  >
                     {message.text}
                   </div>
                   <img
-                    src= {recv}
+                    src={recv}
                     alt="Sender Icon"
                     style={chatbotStyles.icon}
                   />
@@ -123,6 +156,7 @@ function AI() {
               )}
             </div>
           ))}
+          {loading && <div style={chatbotStyles.loadingIndicator}>Typing...</div>}
         </div>
         <div style={chatbotStyles.inputContainer}>
           <input
@@ -132,7 +166,9 @@ function AI() {
             placeholder="Type a message..."
             style={chatbotStyles.input}
           />
-          <button onClick={handleSendMessage} style={chatbotStyles.button}>Send</button>
+          <button onClick={handleSendMessage} style={chatbotStyles.sendIcon}>
+            <img src={upload} alt="Send Icon" style={{ width: "20px", height: "20px" }} />
+          </button>
         </div>
       </div>
     </div>
