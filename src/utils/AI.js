@@ -28,7 +28,7 @@ function AI() {
     messages: {
       maxHeight: "390px",
       overflowY: "scroll",
-      flexGrow: 1, // Allows messages area to grow and fill available space
+      flexGrow: 2, // Allows messages area to grow and fill available space
     },
     messageContainer: {
       display: "flex",

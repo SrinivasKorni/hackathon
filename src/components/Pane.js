@@ -28,7 +28,7 @@ const Divide = () => {
       >
         <Pane minSize={250} maxSize={250}>
           <div className="button-container">
-            <button
+            <button 
               className="styled-button"
               onClick={() => handleButtonClick(Upload)}
             >
@@ -48,8 +48,8 @@ const Divide = () => {
             </button>
           </div>
         </Pane>
-        <Pane minSize={100}>
-          <div style={{ padding: "230px", backgroundColor: "#e9ecef" }}>
+        <Pane minSize={200}>
+          <div style={{ padding: "20px",height:"650px", backgroundColor: "#e9ecef" }}>
             {content}
           </div>
         </Pane>
