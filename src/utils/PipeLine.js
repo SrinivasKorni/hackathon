@@ -1,23 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, ModalBody, Modal } from "react-bootstrap";
 import "../styles/Button.css";
 import VForm from "../styles/Form";
+import axios from "axios";
 
 const PipeLine = () => {
   const [showExistingJobs, setShowExistingJobs] = useState(false);
   const [showCreateTask, setShowCreateTask] = useState(false);
+  const [tasks, setTasks] = useState([]);
+  const [error, setError] = useState("");
+
   const mystyle = {
     margin: "2%",
   };
 
-  const [tasks, setTasks] = useState([
-    {
-      taskname: "Sk",
-      clusterid: "1234",
-      key: "asjd",
-      value: "adsds",
-    },
-  ]);
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await axios.get(
+          "http://127.0.0.1:8000/api/v1/jobs/list"
+        );
+        if (response.status === 200 && Array.isArray(response.data.data)) {
+          setTasks(response.data.data);
+        } else {
+          setError("Unexpected response format");
+        }
+      } catch (error) {
+        setError("Failed to fetch tasks. Please try again.");
+      }
+    };
+
+    fetchTasks();
+  }, []);
 
   const handleShowExistingJobs = () => setShowExistingJobs(true);
   const handleCloseExistingJobs = () => setShowExistingJobs(false);
@@ -51,23 +65,45 @@ const PipeLine = () => {
           <Modal.Title>Existing Tasks</Modal.Title>
         </Modal.Header>
         <ModalBody>
+          {error && <p className="error">{error}</p>}
           {tasks.length === 0 ? (
             <p>No tasks available</p>
           ) : (
             tasks.map((task, index) => (
               <div key={index}>
                 <p>
-                  <strong>Task Name:</strong> {task.taskname}
+                  <strong>Job ID:</strong> {task.job_id}
                 </p>
                 <p>
-                  <strong>Cluster ID:</strong> {task.clusterid}
+                  <strong>Creator User Name:</strong> {task.creator_user_name}
+                </p>
+                {/* <p>
+                  <strong>Run As User Name:</strong> {task.run_as_user_name}
+                </p> */}
+                <p>
+                  <strong>Created Time:</strong>{" "}
+                  {new Date(task.created_time).toLocaleString()}
+                </p>
+                {/* <p>
+                  <strong>Name:</strong> {task.settings.Title}
+                </p> */}
+                <p>
+                  <strong>Format:</strong> {task.settings.format}
                 </p>
                 <p>
-                  <strong>Key:</strong> {task.key}
+                  <strong>Max Concurrent Runs:</strong>{" "}
+                  {task.settings.max_concurrent_runs}
                 </p>
-                <p>
-                  <strong>Value:</strong> {task.value}
-                </p>
+                {/* <p>
+                  <strong>Timeout Seconds:</strong>{" "}
+                  {task.settings.timeout_seconds} */}
+                {/* </p> */}
+                {task.settings.notebook_task && (
+                  <p>
+                    <strong>Notebook Path:</strong>{" "}
+                    {task.settings.notebook_task.notebook_path}
+                  </p>
+                )}
                 <Button
                   variant="danger"
                   onClick={() => handleDeleteTask(index)}
@@ -87,7 +123,7 @@ const PipeLine = () => {
       </Modal>
 
       {/* Button and Modal for Creating New Task */}
-      <Button  variant="primary" onClick={handleShowCreateTask}>
+      <Button variant="primary" onClick={handleShowCreateTask}>
         Create Task
       </Button>
       <Modal show={showCreateTask} onHide={handleCloseCreateTask}>

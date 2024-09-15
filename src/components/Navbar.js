@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 import "./Navbar.css";
@@ -11,9 +12,10 @@ function Navb() {
           style={{ color: "white" }}
           className="custom-navbar-brand"
         >
-          Automate-Databricks
+          <Link to="/" style={{ color: "white", textDecoration: "none" }}>
+            Automate-Databricks
+          </Link>
         </Navbar.Brand>
-        {/* <Navbar.Toggle aria-controls="basic-navbar-nav" /> */}
         <Navbar.Collapse id="basic-navbar-nav"></Navbar.Collapse>
       </Container>
     </Navbar>
