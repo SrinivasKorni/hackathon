@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ai from "../logos/ai.png";
 import recv from "../logos/user.png";
-import upload from '../logos/upload.png';
+import axios from "axios";
+import upload from "../logos/upload.png";
 
 function AI() {
   const [messages, setMessages] = useState([]);
@@ -91,22 +92,48 @@ function AI() {
     setInput(e.target.value);
   };
 
+  // let thread = "thread_EDaA4L25sc3ZKo2ucQWZZxVX";
+  useEffect(() => {
+    try {
+      const res = axios.get(
+        `http://13.233.145.139/api/v1/message_lyra?message={msg}&thread_id={thread}`
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  }, []);
   const handleSendMessage = async () => {
     if (input.trim()) {
+      // Update the UI with the user's message
       setMessages([...messages, { role: "user", text: input }]);
       setInput("");
       setLoading(true); // Show loading indicator
-
       try {
-        // Simulate an API request with a delay
-        const response = await new Promise((resolve) =>
-          setTimeout(() => resolve("This is a bot response"), 1000)
+        // Send a POST request to your backend API
+        const response = await fetch(
+          "http://13.233.145.139/api/v1/message_lyra"
+          // {
+          //   method: "GET",
+          //   headers: {
+          //     "Content-Type": "application/json",
+          //   },
+          //   body: JSON.stringify({
+          //     message: input,
+          //     thread_id:thread
+          //   }), // Send user message
+          // }
         );
-        setMessages([
-          ...messages,
+        // console.log(body);
+
+        const data = await response.json();
+
+        // Update the message list with the bot's response
+        setMessages((prevMessages) => [
+          // ...prevMessages,
           { role: "user", text: input },
-          { role: "bot", text: response },
+          { role: "bot", text: data.response },
         ]);
+        console.log(data);
       } catch (error) {
         console.error("Error fetching bot response:", error);
       } finally {
@@ -114,6 +141,30 @@ function AI() {
       }
     }
   };
+
+  // const handleSendMessage = async () => {
+  //   if (input.trim()) {
+  //     setMessages([...messages, { role: "user", text: input }]);
+  //     setInput("");
+  //     setLoading(true); // Show loading indicator
+
+  //     try {
+  //       // Simulate an API request with a delay
+  //       const response = await new Promise((resolve) =>
+  //         setTimeout(() => resolve("This is a bot response"), 1000)
+  //       );
+  //       setMessages([
+  //         ...messages,
+  //         { role: "user", text: input },
+  //         { role: "bot", text: response },
+  //       ]);
+  //     } catch (error) {
+  //       console.error("Error fetching bot response:", error);
+  //     } finally {
+  //       setLoading(false); // Hide loading indicator
+  //     }
+  //   }
+  // };
 
   return (
     <div style={chatbotStyles.chatbot}>
@@ -156,7 +207,9 @@ function AI() {
               )}
             </div>
           ))}
-          {loading && <div style={chatbotStyles.loadingIndicator}>Typing...</div>}
+          {loading && (
+            <div style={chatbotStyles.loadingIndicator}>Typing...</div>
+          )}
         </div>
         <div style={chatbotStyles.inputContainer}>
           <input
@@ -167,7 +220,11 @@ function AI() {
             style={chatbotStyles.input}
           />
           <button onClick={handleSendMessage} style={chatbotStyles.sendIcon}>
-            <img src={upload} alt="Send Icon" style={{ width: "20px", height: "20px" }} />
+            <img
+              src={upload}
+              alt="Send Icon"
+              style={{ width: "20px", height: "20px" }}
+            />
           </button>
         </div>
       </div>

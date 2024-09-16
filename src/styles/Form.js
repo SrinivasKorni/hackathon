@@ -3,22 +3,23 @@ import { Form, Button, Modal, Container, Row, Col } from "react-bootstrap";
 import axios from "axios";
 import "./Form.css"; // Import custom CSS for additional styling
 
-const VForm = ({ onNewTask }) => {
+const VForm = () => {
   const [jobName, setJobName] = useState("");
   const [taskNames, setTaskNames] = useState([""]);
   const [paths, setPaths] = useState([""]);
-  const [dependents, setDependents] = useState([[""]]);
+  const [dependents, setDependents] = useState([""]);
   const [clusterIds, setClusterIds] = useState([""]);
   const [error, setError] = useState("");
   const [show, setShow] = useState(false);
   const [allTasks, setAllTasks] = useState([]);
   const [allClusters, setAllClusters] = useState([]);
+  const [submittedData, setSubmittedData] = useState([]); // Store the list of lists (all form values)
 
   useEffect(() => {
     const fetchClusters = async () => {
       try {
         const response = await axios.get(
-          "http://127.0.0.1:8000/api/v1/clusters/list"
+          "http://13.233.145.139/api/v1/clusters/list"
         );
         if (response.status === 200 && Array.isArray(response.data.data)) {
           const clusters = response.data.data.map(
@@ -42,7 +43,7 @@ const VForm = ({ onNewTask }) => {
     const fetchTasks = async () => {
       try {
         const response = await axios.get(
-          "http://127.0.0.1:8000/api/v1/workspace/list"
+          "http://13.233.145.139/api/v1/workspace/list"
         );
         if (response.status === 200 && Array.isArray(response.data.data)) {
           setAllTasks(response.data.data);
@@ -61,38 +62,29 @@ const VForm = ({ onNewTask }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const newTask = {
-      job_name: jobName,
-      task_names: taskNames,
-      paths: paths,
-      dependents: dependents,
-      cluster_ids: clusterIds,
-    };
 
-    console.log("Data to be sent to backend:", newTask); // Log the data for verification
+    // Collect current form values into a list
+    const formData = [
+      jobName,
+      [...taskNames],
+      [...paths],
+      [...dependents],
+      [...clusterIds],
+    ];
 
-    try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/v1/jobs/create",
-        newTask
-      );
-      if (response.status === 201) {
-        onNewTask(response.data);
-        setJobName("");
-        setTaskNames([""]);
-        setPaths([""]);
-        setDependents([[""]]);
-        setClusterIds([""]);
-        setError("");
-        console.log(response.data);
-      } else {
-        setError("Failed to create job. Please try again.");
-        setShow(true);
-      }
-    } catch (error) {
-      setError("Failed to create job. Please try again.");
-      setShow(true);
-    }
+    // Add the collected form values to the list of submitted data
+    setSubmittedData([...submittedData, formData]);
+
+    console.log("Submitted data:", formData); // Log current submission
+    console.log("All submitted data:", submittedData); // Log entire submission history
+
+    // Optionally: Clear form fields after submission
+    setJobName("");
+    setTaskNames([""]);
+    setPaths([""]);
+    setDependents([""]);
+    setClusterIds([""]);
+    setError("");
   };
 
   const handleAddField = (setter, values) => {
@@ -122,10 +114,35 @@ const VForm = ({ onNewTask }) => {
             value={jobName}
             onChange={(e) => setJobName(e.target.value)}
             required
+            disabled={submittedData.length > 0} // Disable input after the first job is submitted
           />
         </Form.Group>
+
+        <Form.Group controlId="paths">
+          <Form.Label>Task Name</Form.Label>
+          {paths.map((path, index) => (
+            <Row key={index} className="mb-2">
+              <Col>
+                <Form.Control
+                  type="text"
+                  value={path}
+                  onChange={(e) =>
+                    handleFieldChange(setPaths, paths, index, e.target.value)
+                  }
+                  required
+                />
+              </Col>
+            </Row>
+          ))}
+          {/* <Button
+            variant="outline-primary"
+            onClick={() => handleAddField(setPaths, paths)}
+          >
+            Add Path
+          </Button> */}
+        </Form.Group>
         <Form.Group controlId="taskNames">
-          <Form.Label>Task Names</Form.Label>
+          <Form.Label>Task Path</Form.Label>
           {taskNames.map((taskName, index) => (
             <Row key={index} className="mb-2">
               <Col>
@@ -160,29 +177,6 @@ const VForm = ({ onNewTask }) => {
             Add Task Name
           </Button> */}
         </Form.Group>
-        <Form.Group controlId="paths">
-          <Form.Label>Paths</Form.Label>
-          {paths.map((path, index) => (
-            <Row key={index} className="mb-2">
-              <Col>
-                <Form.Control
-                  type="text"
-                  value={path}
-                  onChange={(e) =>
-                    handleFieldChange(setPaths, paths, index, e.target.value)
-                  }
-                  required
-                />
-              </Col>
-            </Row>
-          ))}
-          {/* <Button
-            variant="outline-primary"
-            onClick={() => handleAddField(setPaths, paths)}
-          >
-            Add Path
-          </Button> */}
-        </Form.Group>
         <Form.Group controlId="dependents">
           <Form.Label>Dependents</Form.Label>
           {dependents.map((dependent, index) => (
@@ -200,14 +194,16 @@ const VForm = ({ onNewTask }) => {
                       e.target.value
                     )
                   }
-                  required
                 >
                   <option value="">Select Dependent</option>
-                  {allTasks.map((task, idx) => (
-                    <option key={idx} value={task}>
-                      {extractFileName(task)}
-                    </option>
-                  ))}
+                  {submittedData.flatMap((jobData, jobIdx) =>
+                    // jobData[1] is the taskNames array for each job
+                    jobData[1].map((taskName, taskIdx) => (
+                      <option key={`${jobIdx}-${taskIdx}`} value={taskName}>
+                        {extractFileName(taskName)} (from Job {jobIdx + 1})
+                      </option>
+                    ))
+                  )}
                 </Form.Control>
               </Col>
             </Row>
@@ -270,6 +266,18 @@ const VForm = ({ onNewTask }) => {
           </Modal.Footer>
         </Modal>
       </Form>
+
+      {/* Display submitted data */}
+      <div className="submitted-data">
+        <h3>Submitted Jobs</h3>
+        <ul>
+          {submittedData.map((data, index) => (
+            <li key={index}>
+              <strong>Job {index + 1}:</strong> {JSON.stringify(data)}
+            </li>
+          ))}
+        </ul>
+      </div>
     </Container>
   );
 };

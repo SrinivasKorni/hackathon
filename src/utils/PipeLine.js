@@ -18,7 +18,7 @@ const PipeLine = () => {
     const fetchTasks = async () => {
       try {
         const response = await axios.get(
-          "http://127.0.0.1:8000/api/v1/jobs/list"
+          "http://13.233.145.139/api/v1/jobs/list"
         );
         if (response.status === 200 && Array.isArray(response.data.data)) {
           setTasks(response.data.data);
@@ -75,7 +75,7 @@ const PipeLine = () => {
                   <strong>Job ID:</strong> {task.job_id}
                 </p>
                 <p>
-                  <strong>Creator User Name:</strong> {task.creator_user_name}
+                  <strong>Job Name:</strong> {task.settings.name}
                 </p>
                 {/* <p>
                   <strong>Run As User Name:</strong> {task.run_as_user_name}
@@ -87,13 +87,13 @@ const PipeLine = () => {
                 {/* <p>
                   <strong>Name:</strong> {task.settings.Title}
                 </p> */}
-                <p>
+                {/* <p>
                   <strong>Format:</strong> {task.settings.format}
                 </p>
                 <p>
                   <strong>Max Concurrent Runs:</strong>{" "}
                   {task.settings.max_concurrent_runs}
-                </p>
+                </p> */}
                 {/* <p>
                   <strong>Timeout Seconds:</strong>{" "}
                   {task.settings.timeout_seconds} */}
